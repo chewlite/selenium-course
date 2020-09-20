@@ -16,4 +16,4 @@ def test_sticker_on_product(driver):
         product_list = box.find_elements_by_class_name('product')
         for product in product_list:
             sticker_exists = product.find_elements_by_class_name('sticker')
-            assert len(sticker_exists) > 0
+            assert len(sticker_exists) == 1
