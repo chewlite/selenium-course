@@ -21,10 +21,9 @@ def test_alphabetical_order_of_countries(driver):
         columns = row.find_elements_by_css_selector('td')
         country_name = columns[4].find_element_by_css_selector('a').text
         countries_list.append(country_name)
-    countries_list_sorted = sorted(countries_list)
     i = 0
     while i < len(countries_list):
-        if countries_list[i] != countries_list_sorted[i]:
-            result = 1
-            assert result != 1
+        result = 0
+        if countries_list[i] != sorted(countries_list)[i]:
+            assert result != 0
         i += 1
