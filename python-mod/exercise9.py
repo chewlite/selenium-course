@@ -19,12 +19,11 @@ def test_alphabetical_order_of_countries(driver):
     driver.find_element_by_name('password').send_keys('admin')
     driver.find_element_by_name('login').click()
 
-    table = driver.find_elements_by_css_selector('table')[1].find_element_by_css_selector('tbody')
-    rows = table.find_elements_by_class_name('row')
     country_list = []
-    for row in rows:
-        columns = row.find_elements_by_css_selector('td')
-        country_name = columns[4].find_element_by_css_selector('a').text
+    countries = driver.find_elements_by_class_name('row')
+    for c in countries:
+        cols = c.find_elements_by_css_selector('td')[4]
+        country_name = cols.find_element_by_css_selector('a').text
         country_list.append(country_name)  # формируем список стран
     i = 0
     while i < len(country_list):
@@ -36,6 +35,7 @@ def test_alphabetical_order_of_countries(driver):
 
 
 def test_alphabetical_order_of_zones_in_country(driver):
+
     driver.get("http://localhost/litecart/admin/?app=countries&doc=countries")
     driver.find_element_by_name('username').send_keys('admin')
     driver.find_element_by_name('password').send_keys('admin')
@@ -43,9 +43,8 @@ def test_alphabetical_order_of_zones_in_country(driver):
 
     checked_countries = []  # список проверенных стран
     while True:
-        table = driver.find_element_by_class_name('dataTable').find_element_by_css_selector('tbody')
-        rows = table.find_elements_by_class_name('row')
-        result = check_zones(rows, checked_countries, driver)  # проверяем сортировку зон в стране
+        countries = driver.find_elements_by_class_name('row')
+        result = check_zones(countries, checked_countries, driver)  # проверяем сортировку зон в стране
         if result is None:  # все нужные страны проверены - заканчиваем тест
             break
         checked_countries.append(result)  # добавляем проверенную страну в список проверенных
@@ -53,13 +52,13 @@ def test_alphabetical_order_of_zones_in_country(driver):
         time.sleep(2)
 
 
-def check_zones(rows, checked_countries, driver):
-    for row in rows:
-        row_td = row.find_elements_by_css_selector('td')
-        country = row_td[4].find_element_by_css_selector('a')
+def check_zones(countries, checked_countries, driver):
+    for c in countries:
+        cols = c.find_elements_by_css_selector('td')
+        country = cols[4].find_element_by_css_selector('a')
         country_name = country.text
         if country_name not in checked_countries:  # если еще не проверяли текущую страну
-            if int(row_td[5].text) > 0:  # и если кол-во зон в этой стране > 0
+            if int(cols[5].text) > 0:  # и если кол-во зон в этой стране > 0
                 country.click()  # открываем страну
                 z_table = driver.find_element_by_id('table-zones').find_element_by_css_selector('tbody')
                 z_rows = z_table.find_elements_by_css_selector('tr')
@@ -81,6 +80,7 @@ def check_zones(rows, checked_countries, driver):
 
 
 def test_alphabetical_order_of_zones_in_geo_zone(driver):
+
     driver.get("http://localhost/litecart/admin/?app=geo_zones&doc=geo_zones")
     driver.find_element_by_name('username').send_keys('admin')
     driver.find_element_by_name('password').send_keys('admin')
