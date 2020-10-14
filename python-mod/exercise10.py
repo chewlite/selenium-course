@@ -38,18 +38,18 @@ def check_details(products, checked_products, driver):
             price_main_value = ''
             discount_price_main_value = ''
 
-            simple_price_main = card.find_elements_by_class_name('price')  # единственная цена в списке
-            regular_price_main = card.find_elements_by_class_name('regular-price')  # обычная цена в списке
-            campaign_price_main = card.find_elements_by_class_name('campaign-price')  # акционная цена в списке
+            simple_price_main = card.find_elements_by_class_name('price')
+            regular_price_main = card.find_elements_by_class_name('regular-price')
+            campaign_price_main = card.find_elements_by_class_name('campaign-price')
 
             if len(simple_price_main) > 0:
                 price_main = simple_price_main[0]
-                price_main_value = price_main.text
+                price_main_value = price_main.text  # единственная цена в списке
 
             if len(regular_price_main) > 0 and len(campaign_price_main) > 0:
 
                 price_main = regular_price_main[0]
-                price_main_value = price_main.text
+                price_main_value = price_main.text  # обычная цена в списке
 
                 # проверка: цвет обычной цены в списке - серый
                 pm_color = price_main.value_of_css_property("color")
@@ -62,7 +62,7 @@ def check_details(products, checked_products, driver):
                 assert pm_style == 'line-through'
 
                 discount_price_main = campaign_price_main[0]
-                discount_price_main_value = discount_price_main.text
+                discount_price_main_value = discount_price_main.text  # акционная цена в списке
 
                 # проверка: цвет акционной цены в списке - красный
                 dpm_color = discount_price_main.value_of_css_property("color")
@@ -83,13 +83,13 @@ def check_details(products, checked_products, driver):
             card.click()
 
             # проверка: имена продукта в списке и в деталях совпадают
-            name_details = driver.find_element_by_css_selector('h1').text  # название продукта в деталях
+            name_details = driver.find_element_by_css_selector('h1').text
             assert name_details == name_main
 
             price_wrapper = driver.find_element_by_class_name('price-wrapper')
-            simple_price_details = price_wrapper.find_elements_by_class_name('price')  # единственная цена в деталях
-            regular_price_details = price_wrapper.find_elements_by_class_name('regular-price')  # обычная цена в деталях
-            campaign_price_details = price_wrapper.find_elements_by_class_name('campaign-price')  # акц. цена в деталях
+            simple_price_details = price_wrapper.find_elements_by_class_name('price')
+            regular_price_details = price_wrapper.find_elements_by_class_name('regular-price')
+            campaign_price_details = price_wrapper.find_elements_by_class_name('campaign-price')
 
             # проверка: единственная цена в списке и в деталях совпадают
             if len(simple_price_details) > 0:
