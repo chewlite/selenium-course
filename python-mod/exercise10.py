@@ -1,5 +1,6 @@
 import pytest
 from selenium import webdriver
+import re
 
 
 @pytest.fixture
@@ -52,23 +53,26 @@ def check_details(products, checked_products, driver):
 
                 # проверка: цвет обычной цены в списке - серый
                 pm_color = price_main.value_of_css_property("color")
-                pm_rgb = pm_color[5:len(pm_color)-1].split(', ')
-                assert pm_rgb[0] == pm_rgb[1] == pm_rgb[2]
+                match = re.search(r"(rgb|rgba)\((\d{1,3}), (\d{1,3}), (\d{1,3})\)", pm_color)
+                if match:
+                    assert match.group(2) == match.group(3) == match.group(4)
 
                 # проверка: обычная цена в списке - зачеркнутая
                 pm_style = price_main.value_of_css_property("text-decoration-line")
                 assert pm_style == 'line-through'
 
-                # проверка: цвет акционной цены в списке - красный
                 discount_price_main = campaign_price_main[0]
                 discount_price_main_value = discount_price_main.text
+
+                # проверка: цвет акционной цены в списке - красный
                 dpm_color = discount_price_main.value_of_css_property("color")
-                dpm_rgb = dpm_color[5:len(dpm_color)-1].split(', ')
-                assert dpm_rgb[1] == dpm_rgb[2] == '0'
+                match = re.search(r"(rgb|rgba)\((\d{1,3}), (\d{1,3}), (\d{1,3})\)", dpm_color)
+                if match:
+                    assert match.group(3) == match.group(4) == '0'
 
                 # проверка: акционная цена в списке - жирная
                 dpm_style = discount_price_main.value_of_css_property("font-weight")
-                assert dpm_style == '700'
+                assert int(dpm_style) >= 700
 
                 # проверка: акционная цена в списке больше обычной цены
                 pm_size = float(price_main.value_of_css_property("font-size").split('px')[0])
@@ -101,8 +105,9 @@ def check_details(products, checked_products, driver):
 
                 # проверка: обычная цена в деталях - серая
                 pd_color = price_details.value_of_css_property("color")
-                rgb = pd_color[5:len(pd_color)-1].split(', ')
-                assert rgb[0] == rgb[1] == rgb[2]
+                match = re.search(r"(rgb|rgba)\((\d{1,3}), (\d{1,3}), (\d{1,3})\)", pd_color)
+                if match:
+                    assert match.group(2) == match.group(3) == match.group(4)
 
                 # проверка: обычная цена в деталях - зачеркнутая
                 pd_style = price_details.value_of_css_property("text-decoration-line")
@@ -115,12 +120,13 @@ def check_details(products, checked_products, driver):
 
                 # проверка: акционная цена в деталях - красная
                 dpd_color = discount_price_details.value_of_css_property("color")
-                rgb = dpd_color[5:len(dpd_color)-1].split(', ')
-                assert rgb[1] == rgb[2] == '0'
+                match = re.search(r"(rgb|rgba)\((\d{1,3}), (\d{1,3}), (\d{1,3})\)", dpd_color)
+                if match:
+                    assert match.group(3) == match.group(4) == '0'
 
                 # проверка: акционная цена в деталях - жирная
                 dpd_style = discount_price_details.value_of_css_property("font-weight")
-                assert dpd_style == '700'
+                assert int(dpd_style) >= 700
 
                 # проверка: акционная цена в деталях больше обычной цены
                 rpd_size = float(price_details.value_of_css_property("font-size").split('px')[0])
