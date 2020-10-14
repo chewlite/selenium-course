@@ -29,7 +29,8 @@ def check_details(products, checked_products, driver):
     for p in products:
 
         card = p.find_element_by_css_selector('a')
-        name_main = card.get_property('title')
+
+        name_main = card.get_property('title')  # название продукта в списке
 
         if name_main not in checked_products:
 
@@ -74,10 +75,11 @@ def check_details(products, checked_products, driver):
                 dpm_size = float(discount_price_main.value_of_css_property("font-size").split('px')[0])
                 assert pm_size < dpm_size
 
+            # переход на страницу деталей продукта
             card.click()
 
             # проверка: имена продукта в списке и в деталях совпадают
-            name_details = driver.find_element_by_css_selector('h1').text
+            name_details = driver.find_element_by_css_selector('h1').text  # название продукта в деталях
             assert name_details == name_main
 
             price_wrapper = driver.find_element_by_class_name('price-wrapper')
