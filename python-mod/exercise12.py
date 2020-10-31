@@ -82,7 +82,7 @@ def test_correct_product_page(driver):
 
     driver.find_element_by_name('save').click()
 
-    # check new product created
+    # check that a new product was created
     time.sleep(1)
     names = []
     table_rows = driver.find_element_by_class_name('dataTable').find_elements_by_class_name('row')
