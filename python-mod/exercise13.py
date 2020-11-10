@@ -40,7 +40,7 @@ def test_basket(driver):
     driver.find_element_by_class_name('link').click()
     time.sleep(1)
     products_in_basket = len(driver.find_element_by_class_name('dataTable').find_elements_by_class_name('item')) - 1
-    # осле каждого удаления проверяем, что товар, который был на последней строчке в таблице, исчез - список уменьшился
+    # после каждого удаления проверяем, что товар, который был на последней строчке в таблице, исчез - список уменьшился
     j = 0
     while j < products_in_basket:
         last_product = driver.find_element_by_class_name('dataTable').find_elements_by_class_name('item')[products_in_basket-j]
